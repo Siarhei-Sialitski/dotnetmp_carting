@@ -5,34 +5,6 @@ namespace DotNetMP.Carting.Core.Tests.Aggregates.CartAggregate;
 
 public class CartTests
 {
-    [Fact]
-    public void Constructor_NullItemsSent_ArgumentNullException()
-    {
-        // Arrange
-        List<Item> nullItemsList = null;
-
-        // Act
-        var exception = Assert.Throws<ArgumentNullException>(() => new Cart(Guid.NewGuid(), nullItemsList));
-
-        // Assert
-        Assert.NotNull(exception);
-        Assert.Equal("items", exception.ParamName);
-    }
-
-    [Fact]
-    public void AddItem_NullItemSent_ArgumentNullExceptionThrown()
-    {
-        // Arrange
-        Item nullItem = null;
-        var cart = new Cart(Guid.NewGuid(), new List<Item>());
-
-        // Act
-        var exception = Assert.Throws<ArgumentNullException>(() => cart.AddItem(nullItem));
-
-        // Assert
-        Assert.NotNull(exception);
-        Assert.Equal("item", exception.ParamName);
-    }
 
     [Fact]
     public void AddItem_ItemWasNotAlreadyAdded_ItemAdded()
@@ -40,7 +12,7 @@ public class CartTests
         // Arrange
         var itemId = Guid.NewGuid();
         var item = new Item(itemId, "item", 3, 100, null);
-        var cart = new Cart(Guid.NewGuid(), new List<Item>());
+        var cart = new Cart(Guid.NewGuid());
 
         // Act
         cart.AddItem(item);
@@ -56,10 +28,11 @@ public class CartTests
         var itemId = Guid.NewGuid();
         var quantity = 3;
         var expectedQuantity = quantity * 2;
-        var item = new Item(itemId, "item", 10.5, quantity, null);
-        var cart = new Cart(Guid.NewGuid(), new List<Item>() { item });
+        var item = new Item(itemId, "item", 10.5M, quantity, null);
+        var cart = new Cart(Guid.NewGuid());
 
         // Act
+        cart.AddItem(item);
         cart.AddItem(item);
 
         // Assert
@@ -72,7 +45,8 @@ public class CartTests
         // Arrange
         var itemId = Guid.NewGuid();
         var item = new Item(itemId, "item", 3, 100, null);
-        var cart = new Cart(Guid.NewGuid(), new List<Item>() { item });
+        var cart = new Cart(Guid.NewGuid());
+        cart.AddItem(item);
 
         // Act
         cart.RemoveItem(itemId);
@@ -86,7 +60,7 @@ public class CartTests
     {
         // Arrange
         var itemId = Guid.NewGuid();
-        var cart = new Cart(Guid.NewGuid(), new List<Item>());
+        var cart = new Cart(Guid.NewGuid());
 
         // Act
         var exception = Assert.Throws<NotFoundException>(() => cart.RemoveItem(itemId));

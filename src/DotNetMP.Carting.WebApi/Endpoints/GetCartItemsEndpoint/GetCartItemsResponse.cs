@@ -1,9 +1,8 @@
-﻿using DotNetMP.Carting.WebApi.ViewModels;
+﻿using DotNetMP.Carting.WebApi.Endpoints.AddItemToCartEndpoint;
 
 namespace DotNetMP.Carting.WebApi.Endpoints.GetCartItemsEndpoint;
 
 public class GetCartItemsResponse
 {
-    public Guid Id { get; set; }
-    public IList<ItemViewModel> Items { get; set; } = new List<ItemViewModel>();
+    public IList<ItemRecord> Items { get; set; } = new List<ItemRecord>();
 }

@@ -8,8 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="Ardalis.ApiEndpoints" Version="4.0.1" />
-    <PackageReference Include="AutoMapper" Version="11.0.1" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="DotNetMP.SharedKernel" Version="1.0.2" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
   </ItemGroup>
@@ -17,6 +15,10 @@
   <ItemGroup>
     <ProjectReference Include="..\DotNetMP.Carting.Core\DotNetMP.Carting.Core.csproj" />
     <ProjectReference Include="..\DotNetMP.Carting.Infrastructure\DotNetMP.Carting.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 
 </Project>

@@ -1,30 +1,30 @@
 ﻿using Ardalis.ApiEndpoints;
-using AutoMapper;
-using DotNetMP.Carting.Core.Interfaces;
+using DotNetMP.Carting.Core.Aggregates.CartAggregate;
+using DotNetMP.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNetMP.Carting.WebApi.Endpoints.RemoveItemFromCartEndpoint;
 
 public class RemoveItemFromCart : EndpointBaseAsync
   .WithRequest<RemoveItemFromCartRequest>
-  .WithActionResult<RemoveItemFromCartResponse>
+  .WithActionResult
 {
-    private readonly ICartCommandService _cartCommandService;
-    private readonly IMapper _mapper;
+    private readonly IRepository<Cart> _cartRepository;
 
-    public RemoveItemFromCart(
-        ICartCommandService cartCommandService,
-        IMapper mapper)
+    public RemoveItemFromCart(IRepository<Cart> cartRepository)
     {
-        _cartCommandService = cartCommandService;
-        _mapper = mapper;
+        _cartRepository = cartRepository;
     }
 
     [HttpDelete(RemoveItemFromCartRequest.Route)]
-    public async override Task<ActionResult<RemoveItemFromCartResponse>> HandleAsync(RemoveItemFromCartRequest request, CancellationToken cancellationToken = default)
+    public async override Task<ActionResult> HandleAsync(RemoveItemFromCartRequest request, CancellationToken cancellationToken = default)
     {
-        var cart = await _cartCommandService.RemoveItemFromCartAsync(request.CartId, request.ItemId);
 
-        return _mapper.Map<RemoveItemFromCartResponse>(cart);
+        var cart = await _cartRepository.GetByIdAsync(request.CartId);
+        if (cart == null) return NotFound();
+
+        cart.RemoveItem(request.ItemId);
+
+        return Ok();
     }
 }

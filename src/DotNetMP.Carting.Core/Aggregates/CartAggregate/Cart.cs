@@ -1,48 +1,46 @@
-﻿using DotNetMP.SharedKernel;
-using DotNetMP.SharedKernel.Exceptions;
+﻿using Ardalis.GuardClauses;
+using DotNetMP.SharedKernel;
 using DotNetMP.SharedKernel.Interfaces;
+using NotFoundException = DotNetMP.SharedKernel.Exceptions.NotFoundException;
 
 namespace DotNetMP.Carting.Core.Aggregates.CartAggregate;
 
 public class Cart : EntityBase, IAggregateRoot
 {
-
-    public IList<Item> Items { get; set; } = new List<Item>();
+    private List<Item> _items = new List<Item>();
+    public IEnumerable<Item> Items => _items.AsReadOnly();
 
     protected Cart()
     { }
 
-    public Cart(Guid id, List<Item> items)
+    public Cart(Guid id)
     {
-        ArgumentNullException.ThrowIfNull(items, nameof(items));
-
         Id = id;
-        Items = items.ToList();
     }
 
     public void AddItem(Item item)
     {
-        ArgumentNullException.ThrowIfNull(item, nameof(item));
+        Guard.Against.Null(item);
 
-        if (Items.Contains(item))
+        if (_items.Contains(item))
         {
-            var existingItem = Items.Single(i => i.Equals(item));
+            var existingItem = _items.Single(i => i.Equals(item));
             existingItem.UpdateQuantity(existingItem.Quantity + item.Quantity);
 
             return;
         }
 
-        Items.Add(item);
+        _items.Add(item);
     }
 
     public void RemoveItem(Guid itemId)
     {
-        var itemToRemove = Items.FirstOrDefault(i => i.Id == itemId);
+        var itemToRemove = _items.FirstOrDefault(i => i.Id == itemId);
         if (itemToRemove == null)
         {
             throw new NotFoundException("Item was not found in cart.");
         }
 
-        Items.Remove(itemToRemove);
+        _items.Remove(itemToRemove);
     }
 }

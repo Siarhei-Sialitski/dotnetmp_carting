@@ -1,32 +1,41 @@
 ﻿using Ardalis.ApiEndpoints;
-using AutoMapper;
 using DotNetMP.Carting.Core.Aggregates.CartAggregate;
-using DotNetMP.Carting.Core.Interfaces;
+using DotNetMP.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNetMP.Carting.WebApi.Endpoints.AddItemToCartEndpoint;
 
 public class AddItemToCart : EndpointBaseAsync
   .WithRequest<AddItemToCartRequest>
-  .WithActionResult<AddItemToCartResponse>
+  .WithActionResult
 {
-    private readonly ICartCommandService _cartCommandService;
-    private readonly IMapper _mapper;
+    private readonly IRepository<Cart> _cartRepository;
 
-    public AddItemToCart(
-        ICartCommandService cartCommandService,
-        IMapper mapper)
+    public AddItemToCart(IRepository<Cart> cartRepository)
     {
-        _cartCommandService = cartCommandService;
-        _mapper = mapper;
+        _cartRepository = cartRepository;
     }
 
     [HttpPost(AddItemToCartRequest.Route)]
-    public async override Task<ActionResult<AddItemToCartResponse>> HandleAsync(AddItemToCartRequest request, CancellationToken cancellationToken = default)
+    public async override Task<ActionResult> HandleAsync(AddItemToCartRequest request, CancellationToken cancellationToken = default)
     {
-        var item = _mapper.Map<Item>(request.Item);
-        var cart = await _cartCommandService.AddItemToCartAsync(request.CartId, item);
+        var cart = await _cartRepository.GetByIdAsync(request.CartId);
+        if (cart == null)
+        {
+            cart = new Cart(request.CartId);
+            await _cartRepository.AddAsync(cart);
+        }
 
-        return _mapper.Map<AddItemToCartResponse>(cart);
+        Image? image = null;
+        if (request.Item.Image != null)
+        {
+            image = new Image(request.Item.Image.Url, request.Item.Image.AltText);
+        }
+
+        var item = new Item(request.Item.Id, request.Item.Name, request.Item.Price, request.Item.Quantity, image);
+        cart.AddItem(item);
+        await _cartRepository.UpdateAsync(cart);
+
+        return Ok();
     }
 }

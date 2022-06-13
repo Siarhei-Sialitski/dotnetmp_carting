@@ -1,7 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
-using AutoMapper;
-using DotNetMP.Carting.Core.Interfaces;
-using DotNetMP.Carting.WebApi.ViewModels;
+using DotNetMP.Carting.Core.Aggregates.CartAggregate;
+using DotNetMP.SharedKernel.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DotNetMP.Carting.WebApi.Endpoints.GetCartItemsEndpoint;
@@ -10,27 +9,31 @@ public class GetCartItems : EndpointBaseAsync
   .WithRequest<GetCartItemsRequest>
   .WithActionResult<GetCartItemsResponse>
 {
-    private readonly ICartQueryService _cartQueryService;
-    private readonly IMapper _mapper;
+    private readonly IRepository<Cart> _cartRepository;
 
-    public GetCartItems(
-        ICartQueryService cartQueryService,
-        IMapper mapper)
+    public GetCartItems(IRepository<Cart> cartRepository)
     {
-        _cartQueryService = cartQueryService;
-        _mapper = mapper;
+        _cartRepository = cartRepository;
     }
 
     [HttpGet(GetCartItemsRequest.Route)]
     public async override Task<ActionResult<GetCartItemsResponse>> HandleAsync(GetCartItemsRequest request, CancellationToken cancellationToken = default)
     {
-        var items = await _cartQueryService.GetCartItemsAsync(request.CartId);
-        var itemsViewModel = _mapper.Map<IEnumerable<ItemViewModel>>(items);
+        var cart = await _cartRepository.GetByIdAsync(request.CartId);
+        if (cart == null)
+        {
+            return NotFound();
+        }
+
+
+        var itemRecords = cart
+            .Items
+            .Select(i => new ItemRecord(i.Id, i.Name, i.Price, i.Quantity, 
+                i.Image != null ? new ImageRecord(i.Image.Url, i.Image.AltText) : null));
 
         return new GetCartItemsResponse
         {
-            Id = request.CartId,
-            Items = itemsViewModel.ToList()
+            Items = itemRecords.ToList()
         };
     }
 }

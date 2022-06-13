@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DotNetMP.Carting.WebApi.ViewModels;
+namespace DotNetMP.Carting.WebApi.Endpoints.AddItemToCartEndpoint;
 
-public class ItemViewModel
+public class ItemDto
 {
     [Required]
     public Guid Id { get; set; }
@@ -10,10 +10,10 @@ public class ItemViewModel
     [Required]
     public string Name { get; set; } = null!;
 
-    public ImageViewModel? Image { get; set; }
+    public ImageDto? Image { get; set; }
 
     [Required]
-    public double Price { get; set; }
+    public decimal Price { get; set; }
 
     [Required]
     public int Quantity { get; set; }
