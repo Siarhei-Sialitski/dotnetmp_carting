@@ -1,10 +1,15 @@
+using Autofac.Extensions.DependencyInjection;
+
 namespace DotNetMP.Carting.WebApi;
 
 public class Program
 {
     public static void Main(string[] args)
     {
-        CreateHostBuilder(args).Build().Run();
+        CreateHostBuilder(args)
+            .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+            .Build()
+            .Run();
     }
 
     public static IHostBuilder CreateHostBuilder(string[] args) =>

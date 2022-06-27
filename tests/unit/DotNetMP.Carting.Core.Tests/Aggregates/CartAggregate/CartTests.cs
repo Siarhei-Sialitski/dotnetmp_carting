@@ -12,7 +12,7 @@ public class CartTests
         // Arrange
         var itemId = Guid.NewGuid();
         var item = new Item(itemId, "item", 3, 100, null);
-        var cart = new Cart(Guid.NewGuid());
+        var cart = new Cart(Guid.NewGuid(), new List<Item>());
 
         // Act
         cart.AddItem(item);
@@ -29,7 +29,7 @@ public class CartTests
         var quantity = 3;
         var expectedQuantity = quantity * 2;
         var item = new Item(itemId, "item", 10.5M, quantity, null);
-        var cart = new Cart(Guid.NewGuid());
+        var cart = new Cart(Guid.NewGuid(), new List<Item>());
 
         // Act
         cart.AddItem(item);
@@ -45,7 +45,7 @@ public class CartTests
         // Arrange
         var itemId = Guid.NewGuid();
         var item = new Item(itemId, "item", 3, 100, null);
-        var cart = new Cart(Guid.NewGuid());
+        var cart = new Cart(Guid.NewGuid(), new List<Item>());
         cart.AddItem(item);
 
         // Act
@@ -60,7 +60,7 @@ public class CartTests
     {
         // Arrange
         var itemId = Guid.NewGuid();
-        var cart = new Cart(Guid.NewGuid());
+        var cart = new Cart(Guid.NewGuid(), new List<Item>());
 
         // Act
         var exception = Assert.Throws<NotFoundException>(() => cart.RemoveItem(itemId));
