@@ -8,14 +8,26 @@ namespace DotNetMP.Carting.Core.Aggregates.CartAggregate;
 public class Cart : EntityBase, IAggregateRoot
 {
     private List<Item> _items = new List<Item>();
-    public IEnumerable<Item> Items => _items.AsReadOnly();
+
+    public IEnumerable<Item> Items 
+    {
+        get
+        {
+            return _items.AsReadOnly();
+        }
+        private set 
+        {
+            _items = value.ToList();
+        }
+    }
 
     protected Cart()
     { }
 
-    public Cart(Guid id)
+    public Cart(Guid id, List<Item> items)
     {
         Id = id;
+        _items = items.ToList();
     }
 
     public void AddItem(Item item)
