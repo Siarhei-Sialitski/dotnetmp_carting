@@ -1,0 +1,28 @@
+@host = https://localhost:7193
+@cartId = 6002f575-30a9-4076-b61f-5c0b5682efd5
+@itemId = 8cf3e01d-ed0b-459d-ae95-84dfb279da1e
+
+
+### Get Cart info by Id V1.
+GET {{host}}/api/carts/{{cartId}} HTTP/2.0
+X-version: 1
+
+### Get Cart info by Id V2.
+GET {{host}}/api/carts/{{cartId}} HTTP/2.0
+X-version: 2
+
+### Add Item to Cart
+POST {{host}}/api/carts/{{cartId}}/items
+Content-Type: application/json
+
+{
+    "id": "8cf3e01d-ed0b-459d-ae95-84dfb279da1e",
+    "name": "TV",
+    "price": 100,
+    "quantity": 4,
+    "ImageUrl": "http://image.com",
+    "ImageAltText": "Image"
+}
+
+### Remove Item from Cart
+DELETE {{host}}/api/carts/{{cartId}}/items/{{itemId}}
