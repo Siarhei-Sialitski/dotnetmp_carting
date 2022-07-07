@@ -109,7 +109,7 @@ public class LiteDbRepositoryTests
     public async Task SaveChangesAsync_ReturnsCompletedTask()
     {
         // Arrange
-        var entity = new TestEntity();
+        _ = new TestEntity();
 
         // Act
         var result = await _liteDbRepository.SaveChangesAsync();

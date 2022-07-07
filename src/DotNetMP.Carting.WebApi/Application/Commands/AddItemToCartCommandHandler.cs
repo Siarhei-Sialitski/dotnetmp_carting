@@ -23,7 +23,7 @@ public class AddItemToCartCommandHandler : IRequestHandler<AddItemToCartCommand>
 
         var item = new Item(request.ItemId, request.Name, request.Price, request.Quantity, image);
 
-        var cart = await _cartsRepository.GetByIdAsync(request.CartId);
+        var cart = await _cartsRepository.GetByIdAsync(request.CartId, cancellationToken);
         if (cart == null)
         {
             await CreateCartWithItem(request.CartId, item);

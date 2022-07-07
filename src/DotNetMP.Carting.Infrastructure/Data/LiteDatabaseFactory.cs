@@ -6,7 +6,7 @@ namespace DotNetMP.Carting.Infrastructure.Data;
 
 public class LiteDatabaseFactory : IClientFactory<ILiteDatabase>
 {
-    private LiteDbOptions _settings;
+    private readonly LiteDbOptions _settings;
 
     public LiteDatabaseFactory(IOptions<LiteDbOptions> options)
     {

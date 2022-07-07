@@ -7,7 +7,7 @@ namespace DotNetMP.Carting.Core.Aggregates.CartAggregate;
 
 public class Cart : EntityBase, IAggregateRoot
 {
-    private List<Item> _items = new List<Item>();
+    private List<Item> _items = new();
 
     public IEnumerable<Item> Items 
     {

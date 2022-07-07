@@ -24,7 +24,7 @@ public class ExceptionMiddleware
         }
     }
 
-    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+    private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         var statusCode = GetStatusCode(exception);
         var message = GetMessage(exception);

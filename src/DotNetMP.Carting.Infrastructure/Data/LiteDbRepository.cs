@@ -8,7 +8,7 @@ internal class LiteDbRepository<T> : IRepository<T> where T : EntityBase, IAggre
 {
     private readonly IClientFactory<ILiteDatabase> _liteDatabaseFactory;
 
-    private string CollectionName => typeof(T).Name;
+    private static string CollectionName => typeof(T).Name;
 
     public LiteDbRepository(IClientFactory<ILiteDatabase> liteDatabaseFactory)
     {
@@ -18,7 +18,7 @@ internal class LiteDbRepository<T> : IRepository<T> where T : EntityBase, IAggre
     public Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
     {
         using var db = GetLiteDatabase();
-        var collection = GetCollection(db);
+        var collection = LiteDbRepository<T>.GetCollection(db);
 
         collection.Insert(entity.Id, entity);
         return Task.FromResult(entity);
@@ -27,7 +27,7 @@ internal class LiteDbRepository<T> : IRepository<T> where T : EntityBase, IAggre
     public Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
     {
         using var db = GetLiteDatabase();
-        var collection = GetCollection(db);
+        var collection = LiteDbRepository<T>.GetCollection(db);
 
         collection.Delete(entity.Id);
 
@@ -37,7 +37,7 @@ internal class LiteDbRepository<T> : IRepository<T> where T : EntityBase, IAggre
     public Task<T?> GetByIdAsync<TId>(TId id, CancellationToken cancellationToken = default) where TId : notnull
     {
         using var db = GetLiteDatabase();
-        var collection = GetCollection(db);
+        var collection = LiteDbRepository<T>.GetCollection(db);
 
         var entity = collection.FindById(new BsonValue(id));
 
@@ -47,7 +47,7 @@ internal class LiteDbRepository<T> : IRepository<T> where T : EntityBase, IAggre
     public Task<IList<T>> ListAsync(CancellationToken cancellationToken = default)
     {
         using var db = GetLiteDatabase();
-        var collection = GetCollection(db);
+        var collection = LiteDbRepository<T>.GetCollection(db);
 
         IList<T> entities = collection.FindAll().ToList();
 
@@ -57,7 +57,7 @@ internal class LiteDbRepository<T> : IRepository<T> where T : EntityBase, IAggre
     public Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
     {
         using var db = GetLiteDatabase();
-        var collection = GetCollection(db);
+        var collection = LiteDbRepository<T>.GetCollection(db);
 
         collection.Update(entity.Id, entity);
 
@@ -74,8 +74,8 @@ internal class LiteDbRepository<T> : IRepository<T> where T : EntityBase, IAggre
         return _liteDatabaseFactory.GetClient();
     }
 
-    private ILiteCollection<T> GetCollection(ILiteDatabase liteDatabase)
+    private static ILiteCollection<T> GetCollection(ILiteDatabase liteDatabase)
     {
-        return liteDatabase.GetCollection<T>(CollectionName);
+        return liteDatabase.GetCollection<T>(LiteDbRepository<T>.CollectionName);
     }
 }
