@@ -16,15 +16,15 @@ public class RemoveItemFromCartCommandHandler : IRequestHandler<RemoveItemFromCa
 
     public async Task<Unit> Handle(RemoveItemFromCartCommand request, CancellationToken cancellationToken)
     {
-        var cart = await _cartsRepository.GetByIdAsync(request.CartId);
+        var cart = await _cartsRepository.GetByIdAsync(request.CartId, cancellationToken);
         if (cart == null) throw new NotFoundException("Cart not found.");
 
         cart.RemoveItem(request.ItemId);
-        await _cartsRepository.UpdateAsync(cart);
+        await _cartsRepository.UpdateAsync(cart, cancellationToken);
 
         if (!cart.Items.Any())
         {
-            await _cartsRepository.DeleteAsync(cart);
+            await _cartsRepository.DeleteAsync(cart, cancellationToken);
         }
 
         return Unit.Value;

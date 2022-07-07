@@ -35,5 +35,17 @@ public class Item : EntityBase, IEquatable<Item>
         return (Id.Equals(other.Id));
     }
 
+#pragma warning disable CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
+    public override bool Equals(object obj)
+#pragma warning restore CS8765 // Nullability of type of parameter doesn't match overridden member (possibly because of nullability attributes).
+    {
+        return Equals(obj as Item);
+    }
+
+    public override int GetHashCode()
+    {
+        return Name.GetHashCode() + Quantity.GetHashCode() + Price.GetHashCode();
+    }
+
     #endregion
 }

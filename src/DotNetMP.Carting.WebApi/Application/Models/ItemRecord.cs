@@ -1,3 +1,3 @@
 ﻿namespace DotNetMP.Carting.WebApi.Application.Models;
 
-public record ItemRecord(Guid id, string name, decimal price, int quantity, ImageRecord? image);
+public record ItemRecord(Guid Id, string Name, decimal Price, int Quantity, ImageRecord? Image);

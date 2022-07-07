@@ -17,7 +17,7 @@ public class GetCartQueryHandlerV1 : IRequestHandler<GetCartQueryV1, CartRecord>
 
     public async Task<CartRecord> Handle(GetCartQueryV1 request, CancellationToken cancellationToken)
     {
-        var cart = await _cartRepository.GetByIdAsync(request.CartId);
+        var cart = await _cartRepository.GetByIdAsync(request.CartId, cancellationToken);
         if (cart == null)
         {
             throw new NotFoundException();
