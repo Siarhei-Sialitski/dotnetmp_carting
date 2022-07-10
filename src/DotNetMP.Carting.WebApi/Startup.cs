@@ -1,7 +1,10 @@
 ﻿using Autofac;
+using DotNetMP.Carting.Infrastructure.IntegrationEvents;
+using DotNetMP.Carting.WebApi.Application.Notifications;
 using DotNetMP.Carting.WebApi.Infrastructure;
 using DotNetMP.Carting.WebApi.Infrastructure.AutofacModules;
 using DotNetMP.Carting.WebApi.Middlewares;
+using DotNetMP.SharedKernel.IntegrationEvents;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
@@ -30,6 +33,8 @@ public class Startup
 
         services.AddOpenApi();
         services.RegisterDependencies(Configuration);
+
+        services.AddTransient<IIntegrationEventNotificationBuilder<ItemUpdatedIntegrationEvent>, ItemUpdatedIntegrationEventNotificationBuilder>();
     }
 
     public void ConfigureContainer(ContainerBuilder builder)
@@ -65,5 +70,8 @@ public class Startup
         {
             endpoints.MapControllers();
         });
+
+        var serviceBus = app.ApplicationServices.GetRequiredService<IIntegrationEventsSubscriber>();
+        serviceBus.Subscribe<ItemUpdatedIntegrationEvent>(Configuration["ItemUpdatedQueue"]);
     }
 }

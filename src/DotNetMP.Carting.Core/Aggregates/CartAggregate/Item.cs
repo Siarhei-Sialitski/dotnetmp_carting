@@ -27,6 +27,21 @@ public class Item : EntityBase, IEquatable<Item>
         Quantity = Guard.Against.NegativeOrZero(quantity);
     }
 
+    public void UpdateName(string name)
+    {
+        Name = Guard.Against.NullOrWhiteSpace(name);
+    }
+
+    public void UpdatePrice(decimal price)
+    {
+        Price = Guard.Against.NegativeOrZero(price);
+    }
+
+    public void UpdateImage(Image? image)
+    {
+        Image = image;
+    }
+
     #region IEquatable<Item>
 
     public bool Equals(Item? other)

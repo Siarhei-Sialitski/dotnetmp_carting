@@ -1,4 +1,6 @@
-﻿namespace DotNetMP.Carting.Core.Aggregates.CartAggregate;
+﻿using Ardalis.GuardClauses;
+
+namespace DotNetMP.Carting.Core.Aggregates.CartAggregate;
 
 public class Image
 {
@@ -8,6 +10,16 @@ public class Image
     public Image(string url, string altText)
     {
         Url = url;
+        AltText = altText;
+    }
+
+    public void UpdateUrl(string url)
+    {
+        Url = Guard.Against.NullOrWhiteSpace(url);
+    }
+
+    public void UpdateAltText(string altText)
+    {
         AltText = altText;
     }
 }

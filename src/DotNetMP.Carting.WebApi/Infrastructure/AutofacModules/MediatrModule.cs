@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Autofac;
+using DotNetMP.Carting.WebApi.Application.Notifications;
 using DotNetMP.Carting.WebApi.Application.Queries;
 using MediatR;
 
@@ -14,6 +15,8 @@ public class MediatrModule : Autofac.Module
 
         builder.RegisterAssemblyTypes(typeof(GetCartQueryV1).GetTypeInfo().Assembly)
             .AsClosedTypesOf(typeof(IRequestHandler<,>));
+
+        builder.RegisterType<ItemUpdatedNotificationHandler>().AsImplementedInterfaces();
 
         builder.Register<ServiceFactory>(ctx =>
         {

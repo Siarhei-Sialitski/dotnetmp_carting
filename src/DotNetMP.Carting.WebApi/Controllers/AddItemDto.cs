@@ -6,9 +6,8 @@ public class AddItemDto
     public string Name { get; private set; }
     public decimal Price { get; private set; }
     public int Quantity { get; private set; }
-    public string ImageUrl { get; private set; }
-    public string ImageAltText { get; private set; }
-    public int MyProperty { get; private set; }
+    public string? ImageUrl { get; private set; }
+    public string? ImageAltText { get; private set; }
 
     public AddItemDto(Guid id, string name, decimal price, int quantity, string imageUrl, string imageAltText)
     {

@@ -11,7 +11,6 @@ public class AddItemToCartCommand : IRequest
     public int Quantity { get; private set; }
     public string ImageUrl { get; private set; }
     public string ImageAltText { get; private set; }
-    public int MyProperty { get; private set; }
 
     public AddItemToCartCommand(Guid cartId, Guid itemId, string name, decimal price, int quantity, string imageUrl, string imageAltText)
     {
