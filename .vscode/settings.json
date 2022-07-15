@@ -1,0 +1,7 @@
+{
+    "rest-client.environmentVariables": {
+        "$sandbox": {
+            "host": "https://localhost:7193"
+        }
+    }
+}
